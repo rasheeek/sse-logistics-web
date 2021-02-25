@@ -20,6 +20,10 @@ const routes: Routes = [
       import('./pages/home/home.module').then((m) => m.HomePageModule),
     canActivate: [HomeGuard],
   },
+  {
+    path: 'drivers',
+    loadChildren: () => import('./pages/drivers/drivers.module').then( m => m.DriversPageModule)
+  },
 ];
 
 @NgModule({
