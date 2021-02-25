@@ -16,7 +16,7 @@
 @import "~@ionic/angular/css/normalize.css";
 @import "~@ionic/angular/css/structure.css";
 @import "~@ionic/angular/css/typography.css";
-@import '~@ionic/angular/css/display.css';
+@import "~@ionic/angular/css/display.css";
 
 /* Optional CSS utils that can be commented out */
 @import "~@ionic/angular/css/padding.css";
@@ -24,3 +24,60 @@
 @import "~@ionic/angular/css/text-alignment.css";
 @import "~@ionic/angular/css/text-transformation.css";
 @import "~@ionic/angular/css/flex-utils.css";
+
+.full-flex {
+  display: flex;
+  height: 100%;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  padding: 10px;
+}
+.flex-item {
+  padding-left: 16px;
+  padding-right: 16px;
+  width: 100%;
+  height: 50px;
+  margin-top: 10px;
+}
+.flex-input {
+  --width: 100%;
+  --padding-left: 15px;
+  --padding: 10px;
+  --padding-start: 10px;
+  --height: 50px;
+  height: 50px;
+  border-radius: 10px;
+  --background: #f0f0f0;
+  font-size: 14px;
+}
+.flex-btn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  margin: 10px 0;
+
+  ion-button {
+    --border-radius: 20px;
+    width: 80%;
+    height: 42px;
+  }
+}
+
+ion-input {
+  --padding-start: 10px;
+  padding: 10px;
+  --padding-end: 12px;
+}
+form {
+  width: 100%;
+}
+.alert-message {
+  color: var(--ion-color-danger);
+  padding-left: 30px;
+  font-size: 12px;
+  margin: 2px 0 10px;
+  font-weight: 700;
+}
