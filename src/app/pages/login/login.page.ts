@@ -1,3 +1,6 @@
+import { ToastService } from './../../services/toast.service';
+import { AlertService } from 'src/app/services/alert.service';
+import { UserService } from './../../services/user.service';
 import { Component, OnInit } from '@angular/core';
 import {
   MenuController,
@@ -28,12 +31,14 @@ export class LoginPage implements OnInit {
     private router: Router,
     private alertCtrl: AlertController,
     private menuCtrl: MenuController,
-    private cookieService: CookieService
+    private cookieService: CookieService,
+    private userService: UserService,
+    private alertService: AlertService,
+    private toastService: ToastService
   ) {}
 
   ionViewWillEnter() {
     this.menuCtrl.enable(false);
-    this.cookieService.set('email', 'test@test.com', 7);
   }
 
   ngOnInit() {
@@ -64,10 +69,22 @@ export class LoginPage implements OnInit {
           };
           this.authService.loginUser(userDetails).then(
             (res) => {
-              loadingEl.dismiss();
-              console.log(res);
-              localStorage.setItem('email', this.loginForm.value.email);
-              this.router.navigate(['/home']);
+              this.cookieService.set('email', this.loginForm.value.email, 1);
+              this.userService.getUserDetails().subscribe(
+                (resp: any) => {
+                  loadingEl.dismiss();
+                  if (resp.isAdmin) {
+                    this.cookieService.set('isAdmin', resp.isAdmin);
+                    this.router.navigate(['/home'], { replaceUrl: true });
+                  } else {
+                    this.toastService.presentToast('Invalid admin credentials');
+                  }
+                },
+                async (err) => {
+                  loadingEl.dismiss();
+                  await this.alertService.showFirebaseAlert(err);
+                }
+              );
             },
             async (err) => {
               loadingEl.dismiss();

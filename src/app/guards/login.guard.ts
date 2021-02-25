@@ -1,17 +1,18 @@
-import { Injectable } from "@angular/core";
+import { CookieService } from 'ngx-cookie-service';
+import { Injectable } from '@angular/core';
 import {
   Router,
   CanActivate,
   ActivatedRouteSnapshot,
   UrlTree,
-} from "@angular/router";
-import { Observable } from "rxjs";
+} from '@angular/router';
+import { Observable } from 'rxjs';
 
 @Injectable({
-  providedIn: "root",
+  providedIn: 'root',
 })
 export class LoginGuard implements CanActivate {
-  constructor(private router: Router) {}
+  constructor(private router: Router, private cookieService: CookieService) {}
 
   canActivate(
     route: ActivatedRouteSnapshot,
@@ -21,8 +22,8 @@ export class LoginGuard implements CanActivate {
     | UrlTree
     | Observable<boolean | UrlTree>
     | Promise<boolean | UrlTree> {
-    if (localStorage.getItem("email")) {
-      this.router.navigateByUrl("/home");
+    if (this.cookieService.check('email')) {
+      this.router.navigateByUrl('/home');
       return false;
     }
     return true;
