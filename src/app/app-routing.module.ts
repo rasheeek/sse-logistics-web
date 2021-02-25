@@ -24,6 +24,18 @@ const routes: Routes = [
     path: 'drivers',
     loadChildren: () => import('./pages/drivers/drivers.module').then( m => m.DriversPageModule)
   },
+  {
+    path: 'states',
+    loadChildren: () => import('./pages/states/states.module').then( m => m.StatesPageModule)
+  },
+  {
+    path: 'trailers',
+    loadChildren: () => import('./pages/trailers/trailers.module').then( m => m.TrailersPageModule)
+  },
+  {
+    path: 'reports',
+    loadChildren: () => import('./pages/reports/reports.module').then( m => m.ReportsPageModule)
+  },
 ];
 
 @NgModule({

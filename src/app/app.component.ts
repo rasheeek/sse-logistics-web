@@ -9,7 +9,10 @@ import { Component } from '@angular/core';
 export class AppComponent {
   public appPages = [
     { title: 'Home', url: '/home', icon: 'home' },
+    { title: 'Reports', url: '/reports', icon: 'document-text' },
     { title: 'Add Drivers', url: '/drivers', icon: 'bus' },
+    { title: 'States', url: '/states', icon: 'location' },
+    { title: 'Trailers', url: '/trailers', icon: 'bus' },
   ];
   constructor(private cookieService: CookieService, private router: Router) {}
 

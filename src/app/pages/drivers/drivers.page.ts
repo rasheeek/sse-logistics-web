@@ -1,3 +1,4 @@
+import { ToastService } from './../../services/toast.service';
 import { DriverService } from './../../services/driver.service';
 import { Component, OnInit } from '@angular/core';
 import {
@@ -24,7 +25,8 @@ export class DriversPage implements OnInit {
     private loadingCtrl: LoadingController,
     private authService: AuthService,
     private router: Router,
-    private driverService: DriverService
+    private driverService: DriverService,
+    private toastService: ToastService
   ) {}
 
   ngOnInit() {
@@ -61,7 +63,6 @@ export class DriversPage implements OnInit {
 
           this.authService.registerUser(userDetails).then(
             (res) => {
-              //           this.router.navigate(['/login']);
               let userData = {
                 name: this.driverForm.value.name,
                 address: this.driverForm.value.address,
@@ -73,6 +74,7 @@ export class DriversPage implements OnInit {
                 .addUser(userData, this.driverForm.value.email)
                 .subscribe((res) => {
                   loadingEl.dismiss();
+                  this.toastService.presentToast('Driver added successsfully');
                   this.driverForm.reset();
                 });
             },
@@ -90,6 +92,10 @@ export class DriversPage implements OnInit {
             }
           );
         });
+    } else {
+      this.toastService.presentToast(
+        'All the fields should be filled and valid'
+      );
     }
   }
 }
