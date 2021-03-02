@@ -1,0 +1,20 @@
+ion-datetime {
+  --placeholder-opacity: 0.8 !important;
+  --placeholder-color: #000000;
+}
+ion-select {
+  --placeholder-opacity: 0.8 !important;
+}
+.checkbox-row {
+  padding-left: 16px;
+  ion-col {
+    display: flex;
+    padding: 10px 10px;
+    ion-checkbox {
+      margin-right: 5px;
+    }
+  }
+}
+.input {
+  padding-left: 15px;
+}

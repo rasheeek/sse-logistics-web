@@ -6,7 +6,65 @@
 </ion-header>
 
 <ion-content>
-  <div class="full-flex">
-    <p>Coming soon</p>
+  <div class="ion-padding">
+    <form [formGroup]="filterForm">
+      <ion-row>
+        <ion-col size="4">
+          <ion-select formControlName="unitNumber" placeholder="Unit number">
+            <ion-select-option
+              *ngFor="let trailer of trailers"
+              [value]="trailer"
+            >
+              {{trailer}}
+            </ion-select-option>
+          </ion-select>
+        </ion-col>
+        <ion-col size="4">
+          <ion-datetime
+            formControlName="startDate"
+            placeholder="Start date"
+          ></ion-datetime>
+        </ion-col>
+        <ion-col size="4">
+          <ion-datetime
+            formControlName="endDate"
+            placeholder="End date"
+          ></ion-datetime>
+        </ion-col>
+      </ion-row>
+      <ion-row class="checkbox-row">
+        <ion-col size="4" sizeMd="2"
+          ><ion-checkbox formControlName="tolls" mode="md"></ion-checkbox
+          >Tolls</ion-col
+        >
+        <ion-col size="4" sizeMd="2"
+          ><ion-checkbox formControlName="fuels" mode="md"></ion-checkbox
+          >Fuels</ion-col
+        >
+        <ion-col size="4" sizeMd="2"
+          ><ion-checkbox formControlName="miscExpenses" mode="md"></ion-checkbox
+          >Misc Expenses</ion-col
+        >
+      </ion-row>
+      <ion-row style="margin-top: 15px; padding-left: 16px">
+        <strong>Header Image :</strong>
+        <input
+          name="Upload header image"
+          class="input"
+          type="file"
+          (change)="loadImageFromDevice($event)"
+          id="file-input"
+          accept="image/*"
+        />
+      </ion-row>
+    </form>
   </div>
+  <div class="flex-btn">
+    <ion-button (click)="generateReport()">Generate</ion-button>
+  </div>
+
+  <!-- <div class="full-flex">
+    <p>Coming soon</p>
+    <ion-button (click)="test()">Test</ion-button>
+  </div> -->
 </ion-content>

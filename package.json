@@ -22,7 +22,10 @@
     "@angular/router": "~11.2.0",
     "@ionic/angular": "^5.5.2",
     "firebase": "^8.2.9",
+    "image-data-uri": "^2.0.1",
+    "moment": "^2.29.1",
     "ngx-cookie-service": "^11.0.2",
+    "pdfmake": "^0.1.70",
     "rxjs": "~6.6.0",
     "tslib": "^2.0.0",
     "zone.js": "~0.10.2"
