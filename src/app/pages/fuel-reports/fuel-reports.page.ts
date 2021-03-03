@@ -1,11 +1,10 @@
-import { UserService } from './../../services/user.service';
-import { ToastService } from './../../services/toast.service';
-import { ListsService } from './../../services/lists.service';
-import { LoadingController } from '@ionic/angular';
-import { TripService } from './../../services/trip.service';
 import { Component, OnInit } from '@angular/core';
+
+import * as moment from 'moment';
+
 import pdfMake from 'pdfmake/build/pdfmake';
 import pdfFonts from 'pdfmake/build/vfs_fonts';
+import { TripService } from 'src/app/services/trip.service';
 import {
   FormBuilder,
   FormGroup,
@@ -13,25 +12,22 @@ import {
   Validators,
 } from '@angular/forms';
 import { AlertService } from 'src/app/services/alert.service';
-import * as moment from 'moment';
-
+import { LoadingController } from '@ionic/angular';
+import { ListsService } from 'src/app/services/lists.service';
+import { ToastService } from 'src/app/services/toast.service';
+import { UserService } from 'src/app/services/user.service';
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
+
 @Component({
-  selector: 'app-reports',
-  templateUrl: './reports.page.html',
-  styleUrls: ['./reports.page.scss'],
+  selector: 'app-fuel-reports',
+  templateUrl: './fuel-reports.page.html',
+  styleUrls: ['./fuel-reports.page.scss'],
 })
-export class ReportsPage implements OnInit {
-  constructor(
-    private tripService: TripService,
-    private formBuilder: FormBuilder,
-    private alertService: AlertService,
-    private loadingCtrl: LoadingController,
-    private listService: ListsService,
-    private toastService: ToastService,
-    private userService: UserService
-  ) {}
+export class FuelReportsPage implements OnInit {
   headerImageUrl = '';
+  filterForm: FormGroup;
+  trailers = [];
+
   content = {
     content: [
       {
@@ -67,7 +63,7 @@ export class ReportsPage implements OnInit {
       },
       {
         style: 'tableExample',
-        fontSize: 6,
+        fontSize: 7,
         margin: [0, 10, 0, 5],
         table: null,
         layout: {
@@ -84,11 +80,19 @@ export class ReportsPage implements OnInit {
     ],
     defaultStyle: {
       columnGap: 25,
-      fontSize: 8,
+      fontSize: 9,
     },
   };
-  filterForm: FormGroup;
-  trailers = [];
+
+  constructor(
+    private tripService: TripService,
+    private formBuilder: FormBuilder,
+    private alertService: AlertService,
+    private loadingCtrl: LoadingController,
+    private listService: ListsService,
+    private toastService: ToastService,
+    private userService: UserService
+  ) {}
 
   ngOnInit() {
     this.filterForm = this.formBuilder.group({
@@ -98,12 +102,6 @@ export class ReportsPage implements OnInit {
         '',
         Validators.compose([Validators.required])
       ),
-      tolls: new FormControl(true, Validators.compose([Validators.required])),
-      miscExpenses: new FormControl(
-        true,
-        Validators.compose([Validators.required])
-      ),
-      fuels: new FormControl(true, Validators.compose([Validators.required])),
     });
     this.loadingCtrl.create({ keyboardClose: true }).then((loadingEl) => {
       loadingEl.present();
@@ -173,7 +171,7 @@ export class ReportsPage implements OnInit {
       heights: 7,
       headerRows: 1,
       color: '#ffffff',
-      widths: ['*', '*', '*', '*', '*', '*'],
+      widths: ['*', '*', '*', '*'],
       body: [
         [
           {
@@ -181,100 +179,35 @@ export class ReportsPage implements OnInit {
             color: '#ffffff',
           },
           {
-            text: 'ORIGIN',
+            text: 'STATE',
             color: '#ffffff',
           },
           {
-            text: 'DESTINATION',
+            text: 'AMOUNT',
             color: '#ffffff',
           },
           {
-            text: 'TRAILER#',
-            color: '#ffffff',
-          },
-          {
-            text: 'MANIFEST#',
-            color: '#ffffff',
-          },
-          {
-            text: 'MILES',
+            text: 'COST',
             color: '#ffffff',
           },
         ],
-        [{}, {}, {}, {}, {}, {}],
-        [{}, {}, {}, {}, {}, {}],
+        [{}, {}, {}, {}],
+        [{}, {}, {}, {}],
       ],
     };
-    if (this.filterForm.value.fuels) {
-      table.widths.push('*');
-      table.body[0].push({
-        text: 'FUELS',
-        color: '#ffffff',
-      });
-      table.body[1].push({ text: '', color: '' });
-      table.body[2].push({ text: '', color: '' });
-    }
-    if (this.filterForm.value.tolls) {
-      table.widths.push('*');
-      table.body[0].push({
-        text: 'TOLLS',
-        color: '#ffffff',
-      });
-      table.body[1].push({ text: '', color: '' });
-      table.body[2].push({ text: '', color: '' });
-    }
-    if (this.filterForm.value.miscExpenses) {
-      table.widths.push('*');
-      table.body[0].push({
-        text: 'MISC EXPENSES',
-        color: '#ffffff',
-      });
-      table.body[1].push({ text: '', color: '' });
-      table.body[2].push({ text: '', color: '' });
-    }
+
     this.content.content[1].table = table;
     res.forEach((trip) => {
-      let count = 0;
-      let data = [
-        moment(trip.date.toDate()).format('DD-MM-YYYY'),
-        trip.origin,
-        trip.destination,
-        trip.trailerNumber,
-        trip.manifestNumber,
-        trip.miles,
-      ];
-      if (this.filterForm.value.fuels) {
-        if (trip.fuelFillings.length > 0) {
-          data.push(this.getCost(trip.fuelFillings));
-        } else {
-          data.push('0');
-        }
-        count = count + 1;
-      }
-      if (this.filterForm.value.tolls) {
-        if (trip.tollPayments.length > 0) {
-          data.push(this.getCost(trip.tollPayments));
-        } else {
-          data.push('0');
-        }
-        count = count + 1;
-      }
-      if (this.filterForm.value.miscExpenses) {
-        if (trip.miscExpenses.length > 0) {
-          data.push(this.getCost(trip.miscExpenses));
-        } else {
-          data.push('0');
-        }
-        count = count + 1;
-      }
-      this.content.content[1].table.body.push(data);
-      let emptyData = [{}, {}, {}, {}, {}, {}];
-      for (let i = 0; i < count; i++) {
-        emptyData.push({});
-      }
-      this.content.content[1].table.body.push(emptyData);
-      this.content.content[0].columns[5].text[0] =
-        '\n' + moment(new Date()).format('DD-MM-YYYY') + '\n\n';
+      trip.fuelFillings.forEach((fuel) => {
+        let data = [
+          moment(fuel.addedDate).format('DD-MM-YYYY'),
+          fuel.state,
+          fuel.amount,
+          fuel.cost,
+        ];
+        this.content.content[1].table.body.push(data);
+        this.content.content[1].table.body.push([{}, {}, {}, {}]);
+      });
     });
     this.loadingCtrl
       .create({ keyboardClose: true, message: 'Loading datas ...' })
@@ -308,18 +241,9 @@ export class ReportsPage implements OnInit {
     reader.readAsArrayBuffer(uploadedFile);
 
     reader.onload = async () => {
-      // get the blob of the image:
       var base64data: any = reader.result;
       this.headerImageUrl = base64data;
-
-      // let blob: Blob = new Blob([reader.result as ArrayBuffer], {
-      //   type: 'application/pdf',
-      // });
-      // console.log('blob', blob);
-      // this.headerImageUrl = URL.createObjectURL(blob);
       this.content.content[0].columns[3].image = base64data;
-      // console.log('blobURL', this.headerImageUrl);
-      // console.log(this.headerImageUrl);
     };
   }
   getCost(res: any) {
@@ -329,5 +253,4 @@ export class ReportsPage implements OnInit {
     });
     return totalCost;
   }
-  //footer color #ffeaa1, text = #b07c26
 }

@@ -36,6 +36,14 @@ const routes: Routes = [
     path: 'reports',
     loadChildren: () => import('./pages/reports/reports.module').then( m => m.ReportsPageModule)
   },
+  {
+    path: 'fuel-reports',
+    loadChildren: () => import('./pages/fuel-reports/fuel-reports.module').then( m => m.FuelReportsPageModule)
+  },
+  {
+    path: 'cities',
+    loadChildren: () => import('./pages/cities/cities.module').then( m => m.CitiesPageModule)
+  },
 ];
 
 @NgModule({
