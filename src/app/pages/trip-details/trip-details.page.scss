@@ -1,0 +1,39 @@
+.image-row {
+  display: flex;
+  div {
+    ion-avatar {
+      --border-radius: 10px;
+      width: 100px;
+      height: 100px;
+    }
+  }
+}
+table {
+  width: 100%;
+  td {
+    text-align: center;
+    ion-avatar {
+      margin: 5px auto;
+      --border-radius: 0px;
+    }
+  }
+  .thead {
+    border: 1px solid gray;
+    background-color: rgb(206, 206, 206);
+  }
+
+  .higlight-row {
+    border: 1px solid gray;
+    background-color: rgb(248, 247, 247);
+  }
+  .normal-row {
+    background-color: rgb(228, 226, 226);
+    border: 1px solid gray;
+  }
+  .total-row {
+    margin-top: 10px;
+    background-color: rgb(99, 99, 99);
+    border: 1px solid gray;
+    color: white;
+  }
+}

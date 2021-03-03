@@ -56,7 +56,8 @@ export class FuelReportsPage implements OnInit {
               '\n1/25/21\n\n',
               'Safe Speed Express Logistics Inc,\n',
               '435 N highview Ave, Elmhurst, IL 60126\n',
-              'Tractor Unit\n\n',
+              '708 733 0303\n',
+              'info@sselogistics.net\n\n',
             ],
           },
         ],
@@ -81,6 +82,11 @@ export class FuelReportsPage implements OnInit {
     defaultStyle: {
       columnGap: 25,
       fontSize: 9,
+    },
+    styles: {
+      header: {
+        bold: true,
+      },
     },
   };
 
@@ -167,6 +173,10 @@ export class FuelReportsPage implements OnInit {
   }
 
   loadReport(res) {
+    let totalFuelCost = 0;
+    let totalFuelAmount = 0;
+    this.content.content[0].columns[5].text[0] =
+      '\n' + moment(new Date()).format('DD-MM-YYYY') + '\n\n';
     let table = {
       heights: 7,
       headerRows: 1,
@@ -203,12 +213,20 @@ export class FuelReportsPage implements OnInit {
           moment(fuel.addedDate).format('DD-MM-YYYY'),
           fuel.state,
           fuel.amount,
-          fuel.cost,
+          '$ ' + fuel.cost,
         ];
+        totalFuelAmount = totalFuelAmount + parseInt(fuel.amount);
+        totalFuelCost = totalFuelCost + parseInt(fuel.cost);
         this.content.content[1].table.body.push(data);
         this.content.content[1].table.body.push([{}, {}, {}, {}]);
       });
     });
+    this.content.content[1].table.body.push([
+      { style: 'header', text: 'TOTAL' },
+      { style: 'header', text: '' },
+      { style: 'header', text: totalFuelAmount },
+      { style: 'header', text: '$ ' + totalFuelCost },
+    ]);
     this.loadingCtrl
       .create({ keyboardClose: true, message: 'Loading datas ...' })
       .then((loadingEl) => {

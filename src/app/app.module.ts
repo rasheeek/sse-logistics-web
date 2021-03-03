@@ -24,7 +24,6 @@ firebase.initializeApp(environment.firebaseConfig);
     BrowserModule,
     IonicModule.forRoot(),
     AppRoutingModule,
-
     AngularFireModule.initializeApp(environment.firebaseConfig),
     AngularFirestoreModule.enablePersistence(),
     AngularFireStorageModule,

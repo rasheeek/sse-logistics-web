@@ -5,4 +5,41 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content> </ion-content>
+<ion-content>
+  <form [formGroup]="filterForm">
+    <ion-row class="filter-row"
+      ><ion-col size="6">
+        Showing trips from {{monthFirstDay}} to {{monthLastDay}}
+      </ion-col>
+      <ion-col class="btn-row" size="6">
+        <ion-datetime
+          formControlName="month"
+          displayFormat="MMMM-YYYY"
+          placeholder="Select Month"
+        ></ion-datetime>
+
+        <ion-button size="small"> Filter </ion-button>
+      </ion-col>
+    </ion-row>
+  </form>
+  <ion-row>
+    <ion-col *ngFor="let trip of trips" sizemd="6" sizeLg="4" size="12">
+      <ion-card (click)="tripClicked(trip.id)">
+        <ion-item>
+          <ion-list>
+            <ion-label> {{formatDate(trip.date)}} </ion-label>
+            <ion-label>Unit Number : {{trip.unitNumber}} </ion-label>
+          </ion-list>
+          <ion-badge slot="end" color="success">Ongoing</ion-badge>
+        </ion-item>
+        <ion-item>
+          <ion-list>
+            <ion-label>
+              From {{trip.origin}} to {{trip.destination}}
+            </ion-label>
+          </ion-list>
+        </ion-item>
+      </ion-card>
+    </ion-col>
+  </ion-row>
+</ion-content>

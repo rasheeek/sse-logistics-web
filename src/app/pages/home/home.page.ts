@@ -1,5 +1,17 @@
-import { MenuController } from '@ionic/angular';
+import { Router } from '@angular/router';
+import { MenuController, LoadingController } from '@ionic/angular';
 import { Component, OnInit } from '@angular/core';
+import {
+  FormGroup,
+  FormControl,
+  Validators,
+  FormBuilder,
+} from '@angular/forms';
+import { TripService } from 'src/app/services/trip.service';
+import { AlertService } from 'src/app/services/alert.service';
+import { ListsService } from 'src/app/services/lists.service';
+import { ToastService } from 'src/app/services/toast.service';
+import * as moment from 'moment';
 
 @Component({
   selector: 'app-home',
@@ -7,10 +19,63 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./home.page.scss'],
 })
 export class HomePage implements OnInit {
-  constructor(private menuCtrl: MenuController) {}
+  filterForm: FormGroup;
+  monthFirstDay;
+  monthLastDay;
+  trips = [];
+  constructor(
+    private menuCtrl: MenuController,
+    private tripService: TripService,
+    private formBuilder: FormBuilder,
+    private alertService: AlertService,
+    private loadingCtrl: LoadingController,
+    private listService: ListsService,
+    private toastService: ToastService,
+    private router: Router
+  ) {}
 
   ionViewWillEnter() {
     this.menuCtrl.enable(true);
   }
-  ngOnInit() {}
+  ngOnInit() {
+    this.filterForm = this.formBuilder.group({
+      month: new FormControl('', Validators.compose([Validators.required])),
+      year: new FormControl('', Validators.compose([Validators.required])),
+    });
+    let today = new Date();
+    this.monthFirstDay = moment(today).startOf('month').format('DD-MM-YYYY');
+    this.monthLastDay = moment(today).endOf('month').format('DD-MM-YYYY');
+    this.loadDatas();
+  }
+
+  loadDatas() {
+    this.loadingCtrl.create({ keyboardClose: true }).then((loadingEl) => {
+      loadingEl.present();
+      let start = moment(new Date()).startOf('month').format('YYYY-MM-DD');
+      let end = moment(new Date())
+        .add(1, 'M')
+        .startOf('month')
+        .format('YYYY-MM-DD');
+      let date = new Date().toISOString();
+      console.log(date);
+
+      console.log(start, end);
+
+      this.tripService
+        .getAlTripsByMonth(new Date(start), new Date(end))
+        .subscribe((res) => {
+          console.log(res);
+          this.trips = res;
+          loadingEl.dismiss();
+        });
+    });
+  }
+
+  tripClicked(id) {
+    this.router.navigate(['trip-details/'], { queryParams: { id: id } });
+  }
+
+  formatDate(date) {
+    return moment(date.toDate()).format('DD-MM-YYYY');
+  }
 }

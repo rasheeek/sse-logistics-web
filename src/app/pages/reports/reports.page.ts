@@ -60,7 +60,8 @@ export class ReportsPage implements OnInit {
               '\n1/25/21\n\n',
               'Safe Speed Express Logistics Inc,\n',
               '435 N highview Ave, Elmhurst, IL 60126\n',
-              'Tractor Unit\n\n',
+              '708 733 0303\n',
+              'info@sselogistics.net\n\n',
             ],
           },
         ],
@@ -318,8 +319,6 @@ export class ReportsPage implements OnInit {
       // console.log('blob', blob);
       // this.headerImageUrl = URL.createObjectURL(blob);
       this.content.content[0].columns[3].image = base64data;
-      // console.log('blobURL', this.headerImageUrl);
-      // console.log(this.headerImageUrl);
     };
   }
   getCost(res: any) {
