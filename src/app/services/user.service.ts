@@ -99,10 +99,19 @@ export class UserService {
   deleteUser(email: string) {
     return new Observable<any>((observer) => {
       const docRef = this.afs.doc(`users/${email}`);
-      docRef.delete().then(
-        (res) => {
-          observer.next(res);
-          observer.complete();
+      const userData = docRef.get().subscribe(
+        (res: any) => {
+          let userData = res.data();
+          this.afAuth
+            .signInWithEmailAndPassword(email, userData.password)
+            .then((res) => {
+              let user = res.user.delete();
+              observer.next('User deleted');
+              observer.complete();
+            })
+            .catch((err) => {
+              observer.error(err);
+            });
         },
         (err) => {
           observer.error(err);

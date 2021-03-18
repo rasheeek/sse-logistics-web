@@ -1,3 +1,4 @@
+import { AddDriversComponent } from './../../component/add-drivers/add-drivers.component';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -14,8 +15,9 @@ import { DriversPage } from './drivers.page';
     FormsModule,
     IonicModule,
     ReactiveFormsModule,
+
     DriversPageRoutingModule,
   ],
-  declarations: [DriversPage],
+  declarations: [DriversPage, AddDriversComponent],
 })
 export class DriversPageModule {}

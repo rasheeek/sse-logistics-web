@@ -1,0 +1,101 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Add driver</ion-title>
+    <ion-icon
+      (click)="dismissModal()"
+      slot="end"
+      color="danger"
+      name="close"
+    ></ion-icon>
+  </ion-toolbar>
+</ion-header>
+<ion-content>
+  <ion-col size="12" sizeMd="12" sizeLg="6">
+    <form [formGroup]="driverForm" (submit)="handleSignUp()">
+      <div class="flex-item" style="margin-top: 3vh">
+        <ion-input
+          formControlName="name"
+          placeholder="Name"
+          class="flex-input"
+        ></ion-input>
+      </div>
+      <div
+        *ngIf="
+          driverForm.get('name').invalid &&
+          (driverForm.get('name').dirty || driverForm.get('name').touched)
+        "
+      >
+        <p class="error-message">Name is required</p>
+      </div>
+
+      <div class="flex-item">
+        <ion-input
+          type="tel"
+          formControlName="mobile"
+          type="number"
+          placeholder="Mobile Number"
+          class="flex-input"
+        ></ion-input>
+      </div>
+      <div
+        *ngIf="
+          driverForm.get('mobile').invalid &&
+          (driverForm.get('mobile').dirty || driverForm.get('mobile').touched)
+        "
+      >
+        <p class="error-message">Enter a valid mobile number</p>
+      </div>
+      <div class="flex-item" style="height: auto">
+        <ion-textarea
+          style="height: 70px"
+          formControlName="address"
+          placeholder="Address"
+          class="flex-input"
+        ></ion-textarea>
+      </div>
+      <div
+        *ngIf="
+          driverForm.get('address').invalid &&
+          (driverForm.get('address').dirty || driverForm.get('address').touched)
+        "
+      >
+        <p class="error-message">Address is required</p>
+      </div>
+      <div class="flex-item">
+        <ion-input
+          formControlName="email"
+          placeholder="Email"
+          class="flex-input"
+        ></ion-input>
+      </div>
+      <div
+        *ngIf="
+          driverForm.get('email').invalid &&
+          (driverForm.get('email').dirty || driverForm.get('email').touched)
+        "
+      >
+        <p class="error-message">Enter a valid email.</p>
+      </div>
+      <div class="flex-item">
+        <ion-input
+          type="password"
+          formControlName="password"
+          placeholder="Password"
+          class="flex-input"
+        ></ion-input>
+      </div>
+      <div
+        *ngIf="
+          driverForm.get('password').invalid &&
+          (driverForm.get('password').dirty ||
+            driverForm.get('password').touched)
+        "
+      >
+        <p class="error-message">Password must be at least 6 characters long</p>
+      </div>
+      <div class="flex-btn" style="margin-top: 5vh">
+        <ion-button type="submit" class="">Add Driver</ion-button>
+      </div>
+    </form>
+  </ion-col>
+</ion-content>

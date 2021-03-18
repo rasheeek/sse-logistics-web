@@ -11,7 +11,7 @@ export class AppComponent {
     { title: 'Home', url: '/home', icon: 'home' },
     { title: 'Trip reports', url: '/reports', icon: 'document-text' },
     { title: 'Fuel reports', url: '/fuel-reports', icon: 'document-text' },
-    { title: 'Add Drivers', url: '/drivers', icon: 'bus' },
+    { title: 'Drivers', url: '/drivers', icon: 'bus' },
     { title: 'States', url: '/states', icon: 'location' },
     { title: 'Cities', url: '/cities', icon: 'location' },
     { title: 'Tractors', url: '/trailers', icon: 'bus' },

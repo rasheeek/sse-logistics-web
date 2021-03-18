@@ -42,8 +42,8 @@ export class HomePage implements OnInit {
       month: new FormControl('', Validators.compose([Validators.required])),
     });
     let today = new Date();
-    this.monthFirstDay = moment(today).startOf('month').format('DD-MM-YYYY');
-    this.monthLastDay = moment(today).endOf('month').format('DD-MM-YYYY');
+    this.monthFirstDay = moment(today).startOf('month').format('MM/DD/YYYY');
+    this.monthLastDay = moment(today).endOf('month').format('MM/DD/YYYY');
     this.loadDatas();
   }
 
@@ -90,10 +90,10 @@ export class HomePage implements OnInit {
               this.trips = res;
               this.monthFirstDay = moment(this.filterForm.value.month)
                 .startOf('month')
-                .format('DD-MM-YYYY');
+                .format('MM/DD/YYYY');
               this.monthLastDay = moment(this.filterForm.value.month)
                 .endOf('month')
-                .format('DD-MM-YYYY');
+                .format('MM/DD/YYYY');
               loadingEl.dismiss();
             },
             (err) => {
@@ -110,6 +110,6 @@ export class HomePage implements OnInit {
   }
 
   formatDate(date) {
-    return moment(date.toDate()).format('DD-MM-YYYY');
+    return moment(date.toDate()).format('MM/DD/YYYY');
   }
 }

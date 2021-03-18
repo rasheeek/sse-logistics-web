@@ -38,11 +38,11 @@ export class TripDetailsPage implements OnInit {
   }
 
   formatDate(date) {
-    return moment(date).format('DD-MM-YYYY');
+    return moment(date).format('MM/DD/YYYY');
   }
 
   formatFirebaseDate(date) {
-    return moment(date.toDate()).format('DD-MM-YYYY');
+    return moment(date.toDate()).format('MM/DD/YYYY');
   }
 
   getTotalCost(res) {

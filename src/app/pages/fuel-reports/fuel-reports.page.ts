@@ -176,7 +176,7 @@ export class FuelReportsPage implements OnInit {
     let totalFuelCost = 0;
     let totalFuelAmount = 0;
     this.content.content[0].columns[5].text[0] =
-      '\n' + moment(new Date()).format('DD-MM-YYYY') + '\n\n';
+      '\n' + moment(new Date()).format('MM/DD/YYYY') + '\n\n';
     let table = {
       heights: 7,
       headerRows: 1,
@@ -210,7 +210,7 @@ export class FuelReportsPage implements OnInit {
     res.forEach((trip) => {
       trip.fuelFillings.forEach((fuel) => {
         let data = [
-          moment(fuel.addedDate).format('DD-MM-YYYY'),
+          moment(fuel.addedDate).format('MM/DD/YYYY'),
           fuel.state,
           fuel.amount,
           '$ ' + fuel.cost,

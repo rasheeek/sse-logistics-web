@@ -237,7 +237,7 @@ export class ReportsPage implements OnInit {
     res.forEach((trip) => {
       let count = 0;
       let data = [
-        moment(trip.date.toDate()).format('DD-MM-YYYY'),
+        moment(trip.date.toDate()).format('MM/DD/YYYY'),
         trip.origin,
         trip.destination,
         trip.trailerNumber,
@@ -275,7 +275,7 @@ export class ReportsPage implements OnInit {
       }
       this.content.content[1].table.body.push(emptyData);
       this.content.content[0].columns[5].text[0] =
-        '\n' + moment(new Date()).format('DD-MM-YYYY') + '\n\n';
+        '\n' + moment(new Date()).format('MM/DD/YYYY') + '\n\n';
     });
     this.loadingCtrl
       .create({ keyboardClose: true, message: 'Loading datas ...' })
