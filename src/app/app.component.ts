@@ -14,7 +14,7 @@ export class AppComponent {
     { title: 'Add Drivers', url: '/drivers', icon: 'bus' },
     { title: 'States', url: '/states', icon: 'location' },
     { title: 'Cities', url: '/cities', icon: 'location' },
-    { title: 'Trailers', url: '/trailers', icon: 'bus' },
+    { title: 'Tractors', url: '/trailers', icon: 'bus' },
   ];
   constructor(private cookieService: CookieService, private router: Router) {}
 

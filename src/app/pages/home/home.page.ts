@@ -40,7 +40,6 @@ export class HomePage implements OnInit {
   ngOnInit() {
     this.filterForm = this.formBuilder.group({
       month: new FormControl('', Validators.compose([Validators.required])),
-      year: new FormControl('', Validators.compose([Validators.required])),
     });
     let today = new Date();
     this.monthFirstDay = moment(today).startOf('month').format('DD-MM-YYYY');
@@ -56,19 +55,54 @@ export class HomePage implements OnInit {
         .add(1, 'M')
         .startOf('month')
         .format('YYYY-MM-DD');
-      let date = new Date().toISOString();
-      console.log(date);
-
-      console.log(start, end);
-
       this.tripService
         .getAlTripsByMonth(new Date(start), new Date(end))
-        .subscribe((res) => {
-          console.log(res);
-          this.trips = res;
-          loadingEl.dismiss();
-        });
+        .subscribe(
+          (res) => {
+            console.log(res);
+            this.trips = res;
+            loadingEl.dismiss();
+          },
+          (err) => {
+            loadingEl.dismiss();
+            this.alertService.showFirebaseAlert(err);
+          }
+        );
     });
+  }
+
+  filterClick() {
+    if (this.filterForm.valid) {
+      let start = moment(this.filterForm.value.month)
+        .startOf('month')
+        .format('YYYY-MM-DD');
+      let end = moment(this.filterForm.value.month)
+        .add(1, 'M')
+        .startOf('month')
+        .format('YYYY-MM-DD');
+      this.loadingCtrl.create({ keyboardClose: true }).then((loadingEl) => {
+        loadingEl.present();
+        this.tripService
+          .getAlTripsByMonth(new Date(start), new Date(end))
+          .subscribe(
+            (res) => {
+              console.log(res);
+              this.trips = res;
+              this.monthFirstDay = moment(this.filterForm.value.month)
+                .startOf('month')
+                .format('DD-MM-YYYY');
+              this.monthLastDay = moment(this.filterForm.value.month)
+                .endOf('month')
+                .format('DD-MM-YYYY');
+              loadingEl.dismiss();
+            },
+            (err) => {
+              loadingEl.dismiss();
+              this.alertService.showFirebaseAlert(err);
+            }
+          );
+      });
+    }
   }
 
   tripClicked(id) {

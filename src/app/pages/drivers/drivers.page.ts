@@ -71,7 +71,7 @@ export class DriversPage implements OnInit {
                 addedDate: new Date().toISOString(),
               };
               this.driverService
-                .addUser(userData, this.driverForm.value.email)
+                .addUser(userData, this.driverForm.value.email.toLowerCase())
                 .subscribe((res) => {
                   loadingEl.dismiss();
                   this.toastService.presentToast('Driver added successsfully');
