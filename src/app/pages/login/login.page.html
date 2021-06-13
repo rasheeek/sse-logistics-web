@@ -1,32 +1,40 @@
 <ion-content>
-  <ion-row>
-    <ion-col sizeSm="12" sizeMd="8" sizeLg="4">
-      <form [formGroup]="loginForm" (submit)="handleLoginUser()">
-        <ion-img src="assets/images/icon.png"></ion-img>
-        <div class="flex-item" style="margin-top: 3vh">
-          <ion-input
-            formControlName="email"
-            placeholder="Email"
-            class="flex-input"
-          ></ion-input>
-        </div>
-        <div
-          *ngIf="loginForm.get('email').invalid && (loginForm.get('email').dirty || loginForm.get('email').touched)"
-        >
-          <p class="alert-message">Enter a valid email.</p>
-        </div>
-        <div class="flex-item">
-          <ion-input
-            formControlName="password"
-            placeholder="Password"
-            type="password"
-            class="flex-input"
-          ></ion-input>
-        </div>
-        <div class="flex-btn" style="margin-top: 5vh">
-          <ion-button type="submit" class="">Log In</ion-button>
-        </div>
-      </form>
-    </ion-col>
-  </ion-row>
+  <div class="layer">
+    <ion-row>
+      <ion-col style="padding: 5px 12px" sizeSm="12" sizeMd="8" sizeLg="4">
+        <form [formGroup]="loginForm" (submit)="handleLoginUser()">
+          <ion-img src="assets/images/icon-transparent.png"></ion-img>
+          <div class="flex-item" style="margin-top: 3vh">
+            <ion-input
+              formControlName="email"
+              placeholder="Email"
+              class="flex-input"
+            ></ion-input>
+          </div>
+          <div
+            *ngIf="loginForm.get('email').invalid && (loginForm.get('email').dirty || loginForm.get('email').touched)"
+          >
+            <p class="alert-message">Enter a valid email.</p>
+          </div>
+          <div class="flex-item">
+            <ion-input
+              formControlName="password"
+              placeholder="Password"
+              type="password"
+              class="flex-input"
+            ></ion-input>
+          </div>
+          <div class="flex-btn" style="margin-top: 5vh">
+            <ion-button type="submit" class="">Log In</ion-button>
+          </div>
+        </form>
+      </ion-col>
+    </ion-row>
+  </div>
 </ion-content>
+<ion-footer class="ion-padding ion-text-center">
+  <ion-text
+    >Copyright © {{year}} All rights reserved - Safe Speed Express Logistics |
+    Admin panel by <a (click)="goToLink()">Rasheek</a></ion-text
+  >
+</ion-footer>

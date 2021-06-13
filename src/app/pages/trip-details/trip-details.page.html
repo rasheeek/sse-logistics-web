@@ -2,6 +2,14 @@
   <ion-toolbar>
     <ion-back-button slot="start"></ion-back-button>
     <ion-title>Trip Details</ion-title>
+    <ion-button
+      style="padding-right: 10px"
+      (click)="deleteTrip()"
+      slot="end"
+      icon-only
+    >
+      <ion-icon name="trash"></ion-icon>
+    </ion-button>
   </ion-toolbar>
 </ion-header>
 
@@ -12,13 +20,29 @@
         <p>Unit Number - {{tripDetails.unitNumber}}</p>
 
         <p>Status : {{tripDetails.status}}</p>
-        <p>Added Date - {{formatDate(tripDetails.addedDate)}}</p>
+        <p>Added Date - {{formatFirebaseDate(tripDetails.addedDate)}}</p>
         <p>Trip Date - {{formatFirebaseDate(tripDetails.date)}}</p>
-        <p>Completed Date - {{formatDate(tripDetails.completedDate)}}</p>
+        <p *ngIf="tripDetails.completedDate">
+          Completed Date - {{formatFirebaseDate(tripDetails.completedDate)}}
+        </p>
         <p>Origin - {{tripDetails.origin}}</p>
         <p>Destination - {{tripDetails.destination}}</p>
-        <p>Manifest Number - {{tripDetails.manifestNumber}}</p>
-        <p>Trailer Number - {{tripDetails.trailerNumber}}</p>
+        <p>
+          Truck type : {{tripDetails.truckType? tripDetails.truckType ==
+          'bobtailOnly'? 'Bobtail Only' : 'Empty Truck' :'None'}}
+        </p>
+        <p *ngIf="tripDetails.manifestNumber">
+          Manifest Number 1 - {{tripDetails.manifestNumber}}
+        </p>
+        <p *ngIf="tripDetails.trailerNumber">
+          Trailer Number 1 - {{tripDetails.trailerNumber}}
+        </p>
+        <p *ngIf="tripDetails.manifestNumber2">
+          Manifest Number 2 - {{tripDetails.manifestNumber2}}
+        </p>
+        <p *ngIf="tripDetails.trailerNumber2">
+          Trailer Number 2 - {{tripDetails.trailerNumber2}}
+        </p>
       </ion-col>
       <ion-col size="12" sizeMd="6">
         <p>Trip ID - {{tripId}}</p>
@@ -27,104 +51,132 @@
         <p>Remarks - {{tripDetails.remarks}}</p>
 
         <div class="image-row">
-          <div>
-            <p>Trailer Image</p>
-            <ion-avatar>
-              <ion-img [src]="tripDetails.trailerImage"></ion-img>
-            </ion-avatar>
-          </div>
-          <div style="margin-left: 15px">
-            <p>Manifest Image</p>
-            <ion-avatar>
-              <ion-img [src]="tripDetails.manifestImage"></ion-img>
-            </ion-avatar>
-          </div>
+          <ion-row>
+            <ion-col *ngIf="tripDetails.trailerImage" size="6">
+              <p>Trailer Image</p>
+              <ion-avatar>
+                <ion-img [src]="tripDetails.trailerImage"></ion-img>
+              </ion-avatar>
+            </ion-col>
+            <ion-col
+              *ngIf="tripDetails.manifestImage"
+              size="6"
+              style="padding-left: 15px"
+            >
+              <p>Manifest Image</p>
+              <ion-avatar>
+                <ion-img [src]="tripDetails.manifestImage"></ion-img>
+              </ion-avatar>
+            </ion-col>
+            <ion-col *ngIf="tripDetails.trailerImage2" size="6">
+              <p>Trailer Image 2</p>
+              <ion-avatar>
+                <ion-img [src]="tripDetails.trailerImage2"></ion-img>
+              </ion-avatar>
+            </ion-col>
+            <ion-col
+              *ngIf="tripDetails.manifestImage2"
+              size="6"
+              style="padding-left: 15px"
+            >
+              <p>Manifest Image 2</p>
+              <ion-avatar>
+                <ion-img [src]="tripDetails.manifestImage2"></ion-img>
+              </ion-avatar>
+            </ion-col>
+          </ion-row>
         </div>
       </ion-col>
     </ion-row>
-    <p>Fuel Fillings</p>
-    <table>
-      <tr class="thead">
-        <th>State</th>
-        <th>Amount</th>
-        <th>Cost</th>
-        <th>Receipt</th>
-      </tr>
-      <tr
-        *ngFor="let fuel of tripDetails.fuelFillings; let i = index"
-        [className]="i%2 == 0? 'higlight-row': 'normal-row'"
-      >
-        <td>{{fuel.state}}</td>
-        <td>{{fuel.amount}}</td>
-        <td>$ {{fuel.cost}}</td>
-        <td>
-          <ion-avatar>
-            <ion-img [src]="fuel.receiptUrl"></ion-img>
-          </ion-avatar>
-        </td>
-      </tr>
-      <ng-container
-        *ngIf="tripDetails.fuelFillings && tripDetails.fuelFillings.length > 0"
-      >
-        <tr class="total-row">
-          <td><strong>Total</strong></td>
-          <td>{{getTotalAmount(tripDetails.fuelFillings)}}</td>
-          <td>$ {{getTotalCost(tripDetails.fuelFillings)}}</td>
-          <td></td>
+    <ng-container *ngIf="tripDetails.fuelFillings.length > 0">
+      <p>Fuel Fillings</p>
+      <table>
+        <tr class="thead">
+          <th>State</th>
+          <th>Amount</th>
+          <th>Cost</th>
+          <th>Receipt</th>
         </tr>
-      </ng-container>
-    </table>
-    <p>Toll Payments</p>
-    <table>
-      <tr class="thead">
-        <th>Description</th>
-        <th>Cost</th>
-        <th>Receipt</th>
-      </tr>
-      <tr
-        *ngFor="let toll of tripDetails.tollPayments; let i = index"
-        [className]="i%2 == 0? 'higlight-row': 'normal-row'"
-      >
-        <td>{{toll.description}}</td>
-        <td>$ {{toll.cost}}</td>
-        <td>
-          <ion-avatar>
-            <ion-img [src]="toll.receiptUrl"></ion-img>
-          </ion-avatar>
-        </td>
-      </tr>
-      <ng-container
-        *ngIf="tripDetails.tollPayments && tripDetails.tollPayments.length > 0"
-      >
-        <tr class="total-row">
-          <td><strong>Total</strong></td>
-          <td>$ {{getTotalCost(tripDetails.tollPayments)}}</td>
-          <td></td>
+        <tr
+          *ngFor="let fuel of tripDetails.fuelFillings; let i = index"
+          [className]="i%2 == 0? 'higlight-row': 'normal-row'"
+        >
+          <td>{{fuel.state}}</td>
+          <td>{{fuel.amount}}</td>
+          <td>$ {{fuel.cost}}</td>
+          <td>
+            <ion-avatar>
+              <ion-img [src]="fuel.receiptUrl"></ion-img>
+            </ion-avatar>
+          </td>
         </tr>
-      </ng-container>
-    </table>
-    <p>Misc Expenses</p>
-    <table>
-      <tr class="thead">
-        <th>Description</th>
-        <th>Cost</th>
-      </tr>
-      <tr
-        *ngFor="let misc of tripDetails.miscExpenses; let i = index"
-        [className]="i%2 == 0? 'higlight-row': 'normal-row'"
-      >
-        <td>{{misc.description}}</td>
-        <td>$ {{misc.cost}}</td>
-      </tr>
-      <ng-container
-        *ngIf="tripDetails.miscExpenses && tripDetails.miscExpenses.length > 0"
-      >
-        <tr class="total-row">
-          <td><strong>Total</strong></td>
-          <td>$ {{getTotalCost(tripDetails.miscExpenses)}}</td>
-          <td></td>
+        <ng-container
+          *ngIf="tripDetails.fuelFillings && tripDetails.fuelFillings.length > 0"
+        >
+          <tr class="total-row">
+            <td><strong>Total</strong></td>
+            <td>{{getTotalAmount(tripDetails.fuelFillings)}}</td>
+            <td>$ {{getTotalCost(tripDetails.fuelFillings)}}</td>
+            <td></td>
+          </tr>
+        </ng-container>
+      </table>
+    </ng-container>
+    <ng-container *ngIf="tripDetails.tollPayments.length > 0">
+      <p>Toll Payments</p>
+      <table>
+        <tr class="thead">
+          <th>Description</th>
+          <th>Cost</th>
+          <th>Receipt</th>
         </tr>
-      </ng-container>
-    </table>
+        <tr
+          *ngFor="let toll of tripDetails.tollPayments; let i = index"
+          [className]="i%2 == 0? 'higlight-row': 'normal-row'"
+        >
+          <td>{{toll.description}}</td>
+          <td>$ {{toll.cost}}</td>
+          <td>
+            <ion-avatar>
+              <ion-img [src]="toll.receiptUrl"></ion-img>
+            </ion-avatar>
+          </td>
+        </tr>
+        <ng-container
+          *ngIf="tripDetails.tollPayments && tripDetails.tollPayments.length > 0"
+        >
+          <tr class="total-row">
+            <td><strong>Total</strong></td>
+            <td>$ {{getTotalCost(tripDetails.tollPayments)}}</td>
+            <td></td>
+          </tr>
+        </ng-container>
+      </table>
+    </ng-container>
+    <ng-container *ngIf="tripDetails.miscExpenses.length > 0">
+      <p>Misc Expenses</p>
+      <table>
+        <tr class="thead">
+          <th>Description</th>
+          <th>Cost</th>
+        </tr>
+        <tr
+          *ngFor="let misc of tripDetails.miscExpenses; let i = index"
+          [className]="i%2 == 0? 'higlight-row': 'normal-row'"
+        >
+          <td>{{misc.description}}</td>
+          <td>$ {{misc.cost}}</td>
+        </tr>
+        <ng-container
+          *ngIf="tripDetails.miscExpenses && tripDetails.miscExpenses.length > 0"
+        >
+          <tr class="total-row">
+            <td><strong>Total</strong></td>
+            <td>$ {{getTotalCost(tripDetails.miscExpenses)}}</td>
+            <td></td>
+          </tr>
+        </ng-container>
+      </table>
+    </ng-container>
   </ng-container>
 </ion-content>

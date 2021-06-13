@@ -5,7 +5,7 @@ import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
 const routes: Routes = [
   {
     path: '',
-    redirectTo: 'home',
+    redirectTo: 'login',
     pathMatch: 'full',
   },
 
@@ -22,31 +22,44 @@ const routes: Routes = [
   },
   {
     path: 'drivers',
-    loadChildren: () => import('./pages/drivers/drivers.module').then( m => m.DriversPageModule)
+    loadChildren: () =>
+      import('./pages/drivers/drivers.module').then((m) => m.DriversPageModule),
   },
   {
     path: 'states',
-    loadChildren: () => import('./pages/states/states.module').then( m => m.StatesPageModule)
+    loadChildren: () =>
+      import('./pages/states/states.module').then((m) => m.StatesPageModule),
   },
   {
     path: 'trailers',
-    loadChildren: () => import('./pages/trailers/trailers.module').then( m => m.TrailersPageModule)
+    loadChildren: () =>
+      import('./pages/trailers/trailers.module').then(
+        (m) => m.TrailersPageModule
+      ),
   },
   {
     path: 'reports',
-    loadChildren: () => import('./pages/reports/reports.module').then( m => m.ReportsPageModule)
+    loadChildren: () =>
+      import('./pages/reports/reports.module').then((m) => m.ReportsPageModule),
   },
   {
     path: 'fuel-reports',
-    loadChildren: () => import('./pages/fuel-reports/fuel-reports.module').then( m => m.FuelReportsPageModule)
+    loadChildren: () =>
+      import('./pages/fuel-reports/fuel-reports.module').then(
+        (m) => m.FuelReportsPageModule
+      ),
   },
   {
     path: 'cities',
-    loadChildren: () => import('./pages/cities/cities.module').then( m => m.CitiesPageModule)
+    loadChildren: () =>
+      import('./pages/cities/cities.module').then((m) => m.CitiesPageModule),
   },
   {
     path: 'trip-details',
-    loadChildren: () => import('./pages/trip-details/trip-details.module').then( m => m.TripDetailsPageModule)
+    loadChildren: () =>
+      import('./pages/trip-details/trip-details.module').then(
+        (m) => m.TripDetailsPageModule
+      ),
   },
 ];
 

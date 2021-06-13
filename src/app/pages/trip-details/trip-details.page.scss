@@ -1,6 +1,7 @@
 .image-row {
-  display: flex;
-  div {
+  ion-col {
+    display: flex;
+    flex-direction: column;
     ion-avatar {
       --border-radius: 10px;
       width: 100px;

@@ -82,4 +82,21 @@ export class TripService {
       );
     });
   }
+
+  deleteTrip(id): Observable<any> {
+    return new Observable<any>((observer) => {
+      this.afs
+        .doc(`trips/${id}`)
+        .delete()
+        .then(
+          (res) => {
+            observer.next(res);
+            observer.complete();
+          },
+          (err) => {
+            observer.error(err);
+          }
+        );
+    });
+  }
 }

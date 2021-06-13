@@ -10,3 +10,33 @@ ion-img {
   text-align: center;
   margin: 5px auto;
 }
+a {
+  cursor: pointer;
+}
+ion-content {
+  --background: #000 url("./../../../assets/images/banner.webp") no-repeat
+    center / cover;
+  position: relative;
+  // --ion-text-color: #ffffff;
+}
+form {
+  background-color: #b9b9b9;
+  padding: 20px 0;
+  border-radius: 10px;
+  opacity: 0.9;
+}
+.layer {
+  background-color: rgba(0, 0, 0, 0.7);
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+ion-footer {
+  background-color: rgba(0, 0, 0, 0.7);
+  color: #b9b9b9;
+  a {
+    color: #ffffff;
+  }
+}

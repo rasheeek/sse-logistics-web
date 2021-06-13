@@ -1,3 +1,4 @@
+import { AuthService } from './services/auth.service';
 import { Router } from '@angular/router';
 import { CookieService } from 'ngx-cookie-service';
 import { Component } from '@angular/core';
@@ -16,10 +17,11 @@ export class AppComponent {
     { title: 'Cities', url: '/cities', icon: 'location' },
     { title: 'Tractors', url: '/trailers', icon: 'bus' },
   ];
-  constructor(private cookieService: CookieService, private router: Router) {}
+  constructor(private auth: AuthService) {
+    this.auth.checkAuthState();
+  }
 
   logOut() {
-    this.cookieService.deleteAll();
-    this.router.navigate(['/login'], { replaceUrl: true });
+    this.auth.signOut();
   }
 }

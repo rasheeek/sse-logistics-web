@@ -1,11 +1,15 @@
-import { Injectable } from "@angular/core";
-import { AlertController } from "@ionic/angular";
+import { AuthService } from 'src/app/services/auth.service';
+import { Injectable } from '@angular/core';
+import { AlertController } from '@ionic/angular';
 
 @Injectable({
-  providedIn: "root",
+  providedIn: 'root',
 })
 export class AlertService {
-  constructor(private alertCtrl: AlertController) {}
+  constructor(
+    private alertCtrl: AlertController,
+    private authService: AuthService
+  ) {}
 
   public async showAlert(header, message, buttons) {
     const alert = await this.alertCtrl.create({
@@ -17,11 +21,15 @@ export class AlertService {
   }
 
   public async showFirebaseAlert(error) {
-    const alert = await this.alertCtrl.create({
-      header: "Error",
-      message: error.message,
-      buttons: ["Okay"],
-    });
-    alert.present();
+    if (error.code != 'permission-denied') {
+      const alert = await this.alertCtrl.create({
+        header: 'Error',
+        message: error.message,
+        buttons: ['Okay'],
+      });
+      alert.present();
+    } else {
+      this.authService.signOut();
+    }
   }
 }

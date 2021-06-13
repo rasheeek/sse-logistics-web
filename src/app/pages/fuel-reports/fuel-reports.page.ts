@@ -12,10 +12,11 @@ import {
   Validators,
 } from '@angular/forms';
 import { AlertService } from 'src/app/services/alert.service';
-import { LoadingController } from '@ionic/angular';
+import { LoadingController, AlertController } from '@ionic/angular';
 import { ListsService } from 'src/app/services/lists.service';
 import { ToastService } from 'src/app/services/toast.service';
 import { UserService } from 'src/app/services/user.service';
+import { ImageService } from 'src/app/services/image.service';
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
 @Component({
@@ -24,12 +25,38 @@ pdfMake.vfs = pdfFonts.pdfMake.vfs;
   styleUrls: ['./fuel-reports.page.scss'],
 })
 export class FuelReportsPage implements OnInit {
+  selectedImage = null;
+  selectedId = null;
   headerImageUrl = '';
   filterForm: FormGroup;
   trailers = [];
-
+  rightHeaderImages = [];
   content = {
     content: [
+      {
+        margin: [0, 0, 0, 10],
+        columns: [
+          {
+            image: this.imageService.imageHeader,
+
+            width: 150,
+          },
+
+          {
+            width: 'auto',
+            fontSize: 12,
+            margin: [0, 15, 0, 0],
+            bold: true,
+            text: [
+              'BDJ Trucking Co.\n',
+              {
+                text: '1425, Payne Road, Schaumburg, IL 60173 \n 224-592-5010',
+                fontSize: 9,
+              },
+            ],
+          },
+        ],
+      },
       {
         columns: [
           {
@@ -43,12 +70,13 @@ export class FuelReportsPage implements OnInit {
             text: ['\nNDAWRE\nN DAWRE\n\n', '#205'],
           },
           {},
+          {},
           {
-            alignment: 'center',
+            alignment: 'right',
             image: '',
             width: 110,
           },
-          {},
+
           {
             alignment: 'right',
             width: 'auto',
@@ -97,7 +125,9 @@ export class FuelReportsPage implements OnInit {
     private loadingCtrl: LoadingController,
     private listService: ListsService,
     private toastService: ToastService,
-    private userService: UserService
+    private userService: UserService,
+    private imageService: ImageService,
+    private alertController: AlertController
   ) {}
 
   ngOnInit() {
@@ -114,7 +144,15 @@ export class FuelReportsPage implements OnInit {
       this.listService.getAllCombos().subscribe(
         (res: any) => {
           this.trailers = res.trailers;
-          loadingEl.dismiss();
+          this.imageService.getAllReportRightHeaderImages().subscribe(
+            (res) => {
+              this.rightHeaderImages = res;
+              loadingEl.dismiss();
+            },
+            (err) => {
+              loadingEl.dismiss();
+            }
+          );
         },
         (err) => {
           loadingEl.dismiss();
@@ -131,7 +169,7 @@ export class FuelReportsPage implements OnInit {
     console.log(endDate);
 
     if (this.filterForm.valid) {
-      if (this.headerImageUrl) {
+      if (this.selectedImage) {
         this.loadingCtrl
           .create({ keyboardClose: true, message: 'Checking datas ...' })
           .then((loadingEl) => {
@@ -165,7 +203,7 @@ export class FuelReportsPage implements OnInit {
               );
           });
       } else {
-        this.toastService.presentToast('Please upload header image');
+        this.toastService.presentToast('Please select a header image');
       }
     } else {
       this.toastService.presentToast('Please fill all the datas');
@@ -175,7 +213,7 @@ export class FuelReportsPage implements OnInit {
   loadReport(res) {
     let totalFuelCost = 0;
     let totalFuelAmount = 0;
-    this.content.content[0].columns[5].text[0] =
+    this.content.content[1].columns[5].text[0] =
       '\n' + moment(new Date()).format('MM/DD/YYYY') + '\n\n';
     let table = {
       heights: 7,
@@ -206,7 +244,7 @@ export class FuelReportsPage implements OnInit {
       ],
     };
 
-    this.content.content[1].table = table;
+    this.content.content[2].table = table;
     res.forEach((trip) => {
       trip.fuelFillings.forEach((fuel) => {
         let data = [
@@ -217,11 +255,11 @@ export class FuelReportsPage implements OnInit {
         ];
         totalFuelAmount = totalFuelAmount + parseInt(fuel.amount);
         totalFuelCost = totalFuelCost + parseInt(fuel.cost);
-        this.content.content[1].table.body.push(data);
-        this.content.content[1].table.body.push([{}, {}, {}, {}]);
+        this.content.content[2].table.body.push(data);
+        this.content.content[2].table.body.push([{}, {}, {}, {}]);
       });
     });
-    this.content.content[1].table.body.push([
+    this.content.content[2].table.body.push([
       { style: 'header', text: 'TOTAL' },
       { style: 'header', text: '' },
       { style: 'header', text: totalFuelAmount },
@@ -233,7 +271,7 @@ export class FuelReportsPage implements OnInit {
         loadingEl.present();
         this.userService.getUserDetailsById(res[0].addedBy).subscribe(
           (resp) => {
-            this.content.content[0].columns[1].text = [
+            this.content.content[1].columns[1].text = [
               '\n' + resp.name + '\n' + res[0].teamMate + '\n\n',
               '#' + res[0].unitNumber,
             ];
@@ -250,19 +288,27 @@ export class FuelReportsPage implements OnInit {
   }
 
   loadImageFromDevice(event) {
-    let verifyUpload = event.target.files.length;
-    console.log(event);
+    const size = event.target.files[0].size;
+    if (size >= 1048487) {
+      this.toastService.presentToast('Image size should be less than 1 mb');
+    } else {
+      let verifyUpload = event.target.files.length;
+      console.log(event);
 
-    let uploadedFile = event.target.files[0];
-    const reader = new FileReader();
+      let uploadedFile = event.target.files[0];
+      const reader = new FileReader();
 
-    reader.readAsArrayBuffer(uploadedFile);
+      reader.readAsArrayBuffer(uploadedFile);
 
-    reader.onload = async () => {
-      var base64data: any = reader.result;
-      this.headerImageUrl = base64data;
-      this.content.content[0].columns[3].image = base64data;
-    };
+      reader.onload = async () => {
+        var base64data: any = reader.result;
+        // this.headerImageUrl = base64data;
+        // this.headerImageUrl = this.content.content[1].columns[3].image = this.rightHeaderImages[0].url;
+        // console.log(base64data);
+        let imageBase64: string = this.arrayBufferToBase64(base64data);
+        this.uploadHeaerImage(imageBase64);
+      };
+    }
   }
   getCost(res: any) {
     let totalCost = 0;
@@ -270,5 +316,86 @@ export class FuelReportsPage implements OnInit {
       totalCost = totalCost + parseInt(item.cost);
     });
     return totalCost;
+  }
+
+  uploadHeaerImage(image: string) {
+    this.loadingCtrl
+      .create({ keyboardClose: true, message: 'Uploading Image' })
+      .then((loadingEl) => {
+        loadingEl.present();
+        let data = {
+          url: image,
+          reportRightHeader: true,
+        };
+        this.imageService.addNewImage(data).subscribe(
+          (res) => {
+            loadingEl.dismiss();
+          },
+          (err) => {
+            loadingEl.dismiss();
+            this.alertService.showFirebaseAlert(err);
+          }
+        );
+      });
+  }
+
+  selectImage(id, image) {
+    this.selectedImage = image;
+    this.selectedId = id;
+    this.content.content[1].columns[4].image = this.selectedImage;
+  }
+
+  async deleteImage(id) {
+    const alert = await this.alertController.create({
+      header: 'Confirm',
+      message:
+        'Are you sure you want to delete this image? This will also delete the image from trip report page',
+      buttons: [
+        {
+          text: 'Cancel',
+          role: 'cancel',
+          handler: (blah) => {},
+        },
+        {
+          text: 'Yes',
+          handler: () => {
+            this.doDeleteImage(id);
+          },
+        },
+      ],
+    });
+    await alert.present();
+  }
+
+  doDeleteImage(id) {
+    this.loadingCtrl
+      .create({ keyboardClose: true, message: 'Deleting Image' })
+      .then((loadingEl) => {
+        loadingEl.present();
+        this.imageService.deleteImage(id).subscribe(
+          (res) => {
+            loadingEl.dismiss();
+            this.toastService.presentToast('Image deleted');
+            if (this.selectedId == id) {
+              this.selectedId = null;
+              this.selectedImage = null;
+            }
+          },
+          (err) => {
+            loadingEl.dismiss();
+            this.alertService.showFirebaseAlert(err);
+          }
+        );
+      });
+  }
+
+  arrayBufferToBase64(buffer) {
+    var binary = '';
+    var bytes = new Uint8Array(buffer);
+    var len = bytes.byteLength;
+    for (var i = 0; i < len; i++) {
+      binary += String.fromCharCode(bytes[i]);
+    }
+    return 'data:image/jpeg;base64,' + window.btoa(binary);
   }
 }

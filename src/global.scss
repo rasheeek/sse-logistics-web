@@ -65,6 +65,20 @@
     height: 42px;
   }
 }
+.report-btn {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  width: 100%;
+  margin: 10px 0;
+  padding-left: 25px;
+
+  ion-button {
+    --border-radius: 20px;
+    width: 300px;
+    height: 42px;
+  }
+}
 
 ion-input {
   --padding-start: 10px;

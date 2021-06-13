@@ -35,19 +35,33 @@
       </ion-row>
 
       <ion-row style="margin-top: 15px; padding-left: 16px">
-        <strong>Header Image :</strong>
-        <input
-          name="Upload header image"
-          class="input"
-          type="file"
-          (change)="loadImageFromDevice($event)"
-          id="file-input"
-          accept="image/*"
-        />
+        <ion-col *ngFor="let image of rightHeaderImages" size="5" sizeMd="2">
+          <ion-avatar
+            (click)="selectImage(image.id, image.url)"
+            [ngClass]="image.id == selectedId? 'selected-image' : ''"
+          >
+            <ion-img [src]="image.url"></ion-img>
+          </ion-avatar>
+          <div (click)="deleteImage(image.id)">
+            <ion-icon name="trash" color="danger"></ion-icon>
+          </div>
+        </ion-col>
+        <ion-col size="4" sizeMd="2">
+          <strong>Upload another image</strong>
+          <br />
+          <input
+            name="Upload header image"
+            class="input"
+            type="file"
+            (change)="loadImageFromDevice($event)"
+            id="file-input"
+            accept="image/*"
+          />
+        </ion-col>
       </ion-row>
     </form>
   </div>
-  <div class="flex-btn">
+  <div class="report-btn">
     <ion-button (click)="generateReport()">Generate</ion-button>
   </div>
 

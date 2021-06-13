@@ -24,6 +24,7 @@ import { CookieService } from 'ngx-cookie-service';
 })
 export class LoginPage implements OnInit {
   loginForm: FormGroup;
+  year = new Date().getFullYear();
   constructor(
     private formBuilder: FormBuilder,
     private authService: AuthService,
@@ -106,5 +107,9 @@ export class LoginPage implements OnInit {
 
       await alert.present();
     }
+  }
+
+  goToLink() {
+    window.open('https://www.linkedin.com/in/rasheek/', '_blank');
   }
 }

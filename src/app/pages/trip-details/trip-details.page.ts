@@ -1,7 +1,8 @@
+import { AlertService } from './../../services/alert.service';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Component, OnInit } from '@angular/core';
 import { TripService } from 'src/app/services/trip.service';
-import { LoadingController } from '@ionic/angular';
+import { LoadingController, AlertController } from '@ionic/angular';
 import * as moment from 'moment';
 
 @Component({
@@ -17,7 +18,9 @@ export class TripDetailsPage implements OnInit {
     private router: Router,
     private route: ActivatedRoute,
     private tripService: TripService,
-    private loadingCtrl: LoadingController
+    private loadingCtrl: LoadingController,
+    private allertService: AlertService,
+    private alertController: AlertController
   ) {}
 
   ngOnInit() {
@@ -58,5 +61,40 @@ export class TripDetailsPage implements OnInit {
       total = total + parseInt(item.amount);
     });
     return total;
+  }
+
+  async deleteTrip() {
+    const alert = await this.alertController.create({
+      header: 'Warning',
+      mode: 'ios',
+      message: 'Are you sure you want to delete the trip?',
+      buttons: [
+        {
+          text: 'Cancel',
+          role: 'cancel',
+          handler: (blah) => {},
+        },
+        {
+          text: 'Yes',
+          handler: () => {
+            this.doDelete();
+          },
+        },
+      ],
+    });
+    await alert.present();
+  }
+
+  doDelete() {
+    this.loadingCtrl.create().then((loadingEl) => {
+      loadingEl.present();
+      this.tripService.deleteTrip(this.tripDetails.id).subscribe(
+        (res) => {
+          loadingEl.dismiss();
+          this.router.navigate(['/home']);
+        },
+        (err) => this.allertService.showFirebaseAlert(err)
+      );
+    });
   }
 }
