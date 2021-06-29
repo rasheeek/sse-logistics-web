@@ -34,30 +34,6 @@ export class FuelReportsPage implements OnInit {
   content = {
     content: [
       {
-        margin: [0, 0, 0, 10],
-        columns: [
-          {
-            image: this.imageService.imageHeader,
-
-            width: 150,
-          },
-
-          {
-            width: 'auto',
-            fontSize: 12,
-            margin: [0, 15, 0, 0],
-            bold: true,
-            text: [
-              'BDJ Trucking Co.\n',
-              {
-                text: '1425, Payne Road, Schaumburg, IL 60173 \n 224-592-5010',
-                fontSize: 9,
-              },
-            ],
-          },
-        ],
-      },
-      {
         columns: [
           {
             width: 'auto',
@@ -213,7 +189,7 @@ export class FuelReportsPage implements OnInit {
   loadReport(res) {
     let totalFuelCost = 0;
     let totalFuelAmount = 0;
-    this.content.content[1].columns[5].text[0] =
+    this.content.content[0].columns[5].text[0] =
       '\n' + moment(new Date()).format('MM/DD/YYYY') + '\n\n';
     let table = {
       heights: 7,
@@ -244,7 +220,7 @@ export class FuelReportsPage implements OnInit {
       ],
     };
 
-    this.content.content[2].table = table;
+    this.content.content[1].table = table;
     res.forEach((trip) => {
       trip.fuelFillings.forEach((fuel) => {
         let data = [
@@ -255,11 +231,11 @@ export class FuelReportsPage implements OnInit {
         ];
         totalFuelAmount = totalFuelAmount + parseInt(fuel.amount);
         totalFuelCost = totalFuelCost + parseInt(fuel.cost);
-        this.content.content[2].table.body.push(data);
-        this.content.content[2].table.body.push([{}, {}, {}, {}]);
+        this.content.content[1].table.body.push(data);
+        this.content.content[1].table.body.push([{}, {}, {}, {}]);
       });
     });
-    this.content.content[2].table.body.push([
+    this.content.content[1].table.body.push([
       { style: 'header', text: 'TOTAL' },
       { style: 'header', text: '' },
       { style: 'header', text: totalFuelAmount },
@@ -271,7 +247,7 @@ export class FuelReportsPage implements OnInit {
         loadingEl.present();
         this.userService.getUserDetailsById(res[0].addedBy).subscribe(
           (resp) => {
-            this.content.content[1].columns[1].text = [
+            this.content.content[0].columns[1].text = [
               '\n' + resp.name + '\n' + res[0].teamMate + '\n\n',
               '#' + res[0].unitNumber,
             ];
@@ -342,7 +318,7 @@ export class FuelReportsPage implements OnInit {
   selectImage(id, image) {
     this.selectedImage = image;
     this.selectedId = id;
-    this.content.content[1].columns[4].image = this.selectedImage;
+    this.content.content[0].columns[4].image = this.selectedImage;
   }
 
   async deleteImage(id) {

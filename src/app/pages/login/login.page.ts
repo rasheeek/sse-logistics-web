@@ -75,7 +75,7 @@ export class LoginPage implements OnInit {
                 (resp: any) => {
                   loadingEl.dismiss();
                   if (resp.isAdmin) {
-                    this.cookieService.set('isAdmin', resp.isAdmin);
+                    this.cookieService.set('isAdmin', resp.isAdmin, 1);
                     this.router.navigate(['/home'], { replaceUrl: true });
                   } else {
                     this.toastService.presentToast('Invalid admin credentials');
