@@ -77,7 +77,7 @@ export class ReportsPage implements OnInit {
       },
       {
         style: 'tableExample',
-        fontSize: 6,
+        fontSize: 5,
         margin: [0, 10, 0, 5],
         table: null,
         layout: {
@@ -94,7 +94,7 @@ export class ReportsPage implements OnInit {
     ],
     defaultStyle: {
       columnGap: 25,
-      fontSize: 9,
+      fontSize: 8,
     },
   };
 
@@ -189,7 +189,7 @@ export class ReportsPage implements OnInit {
       heights: 7,
       headerRows: 1,
       color: '#ffffff',
-      widths: ['*', '*', '*', '*', '*', '*'],
+      widths: ['*', '*', '*', '*', '*', '*', '*', '*', '*'],
       body: [
         [
           {
@@ -205,6 +205,10 @@ export class ReportsPage implements OnInit {
             color: '#ffffff',
           },
           {
+            text: 'TRIP#',
+            color: '#ffffff',
+          },
+          {
             text: 'TRAILER#',
             color: '#ffffff',
           },
@@ -213,12 +217,20 @@ export class ReportsPage implements OnInit {
             color: '#ffffff',
           },
           {
+            text: 'TRAILER 2#',
+            color: '#ffffff',
+          },
+          {
+            text: 'MANIFEST 2#',
+            color: '#ffffff',
+          },
+          {
             text: 'MILES',
             color: '#ffffff',
           },
         ],
-        [{}, {}, {}, {}, {}, {}],
-        [{}, {}, {}, {}, {}, {}],
+        [{}, {}, {}, {}, {}, {}, {}, {}, {}],
+        [{}, {}, {}, {}, {}, {}, {}, {}, {}],
       ],
     };
     if (this.filterForm.value.fuels) {
@@ -255,9 +267,12 @@ export class ReportsPage implements OnInit {
         moment(trip.date.toDate()).format('MM/DD/YYYY'),
         trip.origin,
         trip.destination,
-        trip.trailerNumber,
-        trip.manifestNumber,
-        trip.miles,
+        trip.dollyNumber ? 'DOLLY ' + trip.dollyNumber : 'EMPTY',
+        trip.trailerNumber ? trip.trailerNumber : 'EMPTY',
+        trip.manifestNumber ? trip.manifestNumber : 'EMPTY',
+        trip.trailerNumber2 ? trip.trailerNumber2 : 'EMPTY',
+        trip.manifestNumber2 ? trip.manifestNumber2 : 'EMPTY',
+        trip.miles ? trip.miles : 'EMPTY',
       ];
       if (this.filterForm.value.fuels) {
         if (trip.fuelFillings.length > 0) {
@@ -284,7 +299,7 @@ export class ReportsPage implements OnInit {
         count = count + 1;
       }
       this.content.content[1].table.body.push(data);
-      let emptyData = [{}, {}, {}, {}, {}, {}];
+      let emptyData = [{}, {}, {}, {}, {}, {}, {}, {}, {}];
       for (let i = 0; i < count; i++) {
         emptyData.push({});
       }
