@@ -46,21 +46,23 @@ export class ReportsPage implements OnInit {
       {
         columns: [
           {
-            width: 'auto',
-            bold: true,
-            text: ['\nDriver names\n\n\n', 'Tractor Unit\n\n'],
+            columns: [
+              {
+                width: 'auto',
+                bold: true,
+                text: ['\nDriver names\n\n\n', 'Tractor Unit\n\n'],
+              },
+              {
+                width: 'auto',
+                bold: true,
+                text: ['\nNDAWRE\nN DAWRE\n\n', '#205'],
+              },
+            ],
           },
           {
-            width: 'auto',
-            bold: true,
-            text: ['\nNDAWRE\nN DAWRE\n\n', '#205'],
-          },
-          {},
-          {},
-          {
-            alignment: 'right',
+            alignment: 'left',
             image: '',
-            width: 110,
+            fit: [110, 110],
           },
           {
             alignment: 'right',
@@ -304,7 +306,7 @@ export class ReportsPage implements OnInit {
         emptyData.push({});
       }
       this.content.content[1].table.body.push(emptyData);
-      this.content.content[0].columns[5].text[0] =
+      this.content.content[0].columns[2].text[0] =
         '\n' + moment(new Date()).format('MM/DD/YYYY') + '\n\n';
     });
     this.loadingCtrl
@@ -313,7 +315,7 @@ export class ReportsPage implements OnInit {
         loadingEl.present();
         this.userService.getUserDetailsById(res[0].addedBy).subscribe(
           (resp) => {
-            this.content.content[0].columns[1].text = [
+            this.content.content[0].columns[0].columns[1].text = [
               '\n' + resp.name + '\n' + res[0].teamMate + '\n\n',
               '#' + res[0].unitNumber,
             ];
@@ -385,7 +387,7 @@ export class ReportsPage implements OnInit {
   selectImage(id, image) {
     this.selectedImage = image;
     this.selectedId = id;
-    this.content.content[0].columns[4].image = this.selectedImage;
+    this.content.content[0].columns[1].image = this.selectedImage;
   }
 
   async deleteImage(id) {
